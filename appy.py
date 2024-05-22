@@ -22,8 +22,6 @@ sinonimos = {
     'bajo': 'reducido',
     'caro': 'costoso',
     'barato': 'económico',
-    'rápido': 'expeditivo',
-    'lento': 'tardío',
     'fácil': 'sencillo',
     'difícil': 'complicado',
     'nuevo': 'moderno',
@@ -44,12 +42,8 @@ sinonimos = {
     'estrecho': 'reducido',
     'dulce': 'azucarado',
     'amargo': 'desagradable',
-    'rápido': 'ágil',
-    'lento': 'lánguido',
     'caliente': 'ardiente',
     'frío': 'helado',
-    'fuerte': 'potente',
-    'débil': 'endeble',
     'joven': 'juvenil',
     'anciano': 'veterano',
     'rico': 'opulento',
@@ -60,26 +54,29 @@ sinonimos = {
     'aburrido': 'tedioso',
     'cansado': 'agotado',
     'enérgico': 'vigoroso',
-    'feliz': 'contento',
-    'triste': 'melancólico',
     'morir': 'fallecer'
 }
 
-# Función para reemplazar palabras por sus sinónimos
+# Función para reemplazar palabras por sus sinónimos, manejando mayúsculas
 def reemplazar_sinonimos(texto):
     palabras = re.findall(r'\b\w+\b', texto)
     nuevo_texto = []
     palabras_cambiadas = set()
-    
+
     for palabra in palabras:
-        nueva_palabra = sinonimos.get(palabra, palabra)
+        palabra_minuscula = palabra.lower()
+        nueva_palabra = sinonimos.get(palabra_minuscula, palabra_minuscula)
+        if palabra.istitle():
+            nueva_palabra = nueva_palabra.capitalize()
+        elif palabra.isupper():
+            nueva_palabra = nueva_palabra.upper()
         nuevo_texto.append(nueva_palabra)
-        if nueva_palabra != palabra:
+        if nueva_palabra.lower() != palabra_minuscula:
             palabras_cambiadas.add(palabra)
     
     # Reconstruir el texto con los reemplazos
     patron = re.compile(r'\b\w+\b')
-    nuevo_texto_completo = patron.sub(lambda match: sinonimos.get(match.group(), match.group()), texto)
+    nuevo_texto_completo = patron.sub(lambda match: sinonimos.get(match.group().lower(), match.group()), texto)
     
     return nuevo_texto_completo, palabras_cambiadas
 
